@@ -1,0 +1,8 @@
+Twitter Console Application
+===========================
+
+This application can be built using Gradle.
+
+To execute all tests issue:
+
+$ ./gradlew test
