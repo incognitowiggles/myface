@@ -8,6 +8,7 @@ import static CommandLineApplicationDsl.commandLineApplication
 import static SubmittableCommandsDsl.timelineFor
 import static acceptancetest.SubmittableCommandsDsl.emptyLine
 import static acceptancetest.SubmittableCommandsDsl.exit
+import static acceptancetest.SubmittableCommandsDsl.writePost
 
 class CommandLineAppSpec extends Specification {
     def "accepts commands until exiting"() {
@@ -27,12 +28,27 @@ class CommandLineAppSpec extends Specification {
         then:
             application.receivedOutput("")
     }
+
+    def "a user can post to their own timeline"() {
+        given:
+            def application = commandLineApplication()
+        when:
+            application.receivesCommands(writePost("I am alive!").to("Alice"), timelineFor("Alice"))
+        then:
+            application.receivedOutput("I am alive! (Just now)")
+    }
 }
 
 class SubmittableCommandsDsl {
     static CommandDsl timelineFor(String name) { return new CommandDsl(input: name) }
     static CommandDsl exit() { return new CommandDsl(input: 'exit') }
     static CommandDsl emptyLine() { return new CommandDsl() }
+    static UserCommandDsl writePost(String postText) { return new UserCommandDsl(command: "-> $postText") }
+}
+
+class UserCommandDsl {
+    def String command
+    CommandDsl to(String user) { return new CommandDsl(input: "$user $command")}
 }
 
 class CommandDsl {
