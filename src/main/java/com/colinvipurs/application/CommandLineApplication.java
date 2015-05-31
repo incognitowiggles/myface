@@ -14,7 +14,6 @@ public class CommandLineApplication {
         this.timelines = timelines;
         reader = new BufferedReader(new InputStreamReader(input));
         writer = new BufferedWriter(new OutputStreamWriter(output));
-        runEventLoop();
     }
 
     public void runEventLoop() throws IOException {
