@@ -62,7 +62,7 @@ class CommandLineApplicationDsl {
         ByteArrayInputStream commandInput =
                 new ByteArrayInputStream(commands*.input.join(System.lineSeparator()).getBytes(Charsets.UTF_8))
         output = new ByteArrayOutputStream()
-        new CommandLineApplication(commandInput, output)
+        new CommandLineApplication(commandInput, output).runEventLoop()
     }
 
     void receivedOutput(String ... lines) {

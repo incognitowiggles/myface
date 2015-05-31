@@ -7,11 +7,17 @@ import java.io.*;
  */
 public class CommandLineApplication {
     private Timelines timelines = new Timelines();
+    private final BufferedReader reader;
+    private final BufferedWriter writer;
 
     public CommandLineApplication(InputStream input, OutputStream output) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(output));
-        String inputLine = null;
+        reader = new BufferedReader(new InputStreamReader(input));
+        writer = new BufferedWriter(new OutputStreamWriter(output));
+        runEventLoop();
+    }
+
+    public void runEventLoop() throws IOException {
+        String inputLine;
         while ((inputLine = reader.readLine()) != null) {
             if (inputLine.contains("->")) {
                 String[] commandData = inputLine.split(" -> ");
@@ -20,10 +26,10 @@ public class CommandLineApplication {
                 timelines.push(NewPost.of(user, post));
             } else if (!inputLine.equalsIgnoreCase("Exit")) {
                 for (Post post : timelines.postsFor(inputLine)) {
-                    bufferedWriter.write(post.describe() + "\n");
+                    writer.write(post.describe() + "\n");
                 }
             }
-            bufferedWriter.flush();
+            writer.flush();
         }
     }
 }
