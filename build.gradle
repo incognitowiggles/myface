@@ -1,1 +1,43 @@
-apply plugin: 'java'
+import groovy.json.internal.Charsets
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'groovy'
+    id 'application'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile(
+        "org.spockframework:spock-core:1.0-groovy-2.4",
+        "org.codehaus.groovy:groovy:2.4.3"
+    )
+}
+
+/**
+ * This will run an end-to-end test after all standard unit/integration tests have been run.
+ * This simply starts the application asking for Alices wall an verifies that there is just the response
+ * of "Empty".
+ *
+ * This test is hard to write unit standard unit testing tools due to the nature of messing around with
+ * stdin/stdout from within the test runner process itself and is very easy to write within Gradle itself
+ * as it already has access to the final classpath etc.
+ */
+task end2end(dependsOn: [test, classes], type: JavaExec) {
+    main = 'com.colinvipurs.application.Start'
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = new ByteArrayInputStream("Alice".getBytes(Charsets.UTF_8))
+    standardOutput = new ByteArrayOutputStream()
+
+    doLast {
+        def commandOutput = standardOutput.toString()
+        assert commandOutput == "Empty\n"
+    }
+}
