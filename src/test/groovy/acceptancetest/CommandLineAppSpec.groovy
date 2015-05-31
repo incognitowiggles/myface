@@ -1,6 +1,7 @@
 package acceptancetest
 
 import com.colinvipurs.application.CommandLineApplication
+import com.colinvipurs.application.InMemoryTimeLines
 import groovy.json.internal.Charsets
 import spock.lang.Specification
 
@@ -74,7 +75,7 @@ class CommandLineApplicationDsl {
         ByteArrayInputStream commandInput =
                 new ByteArrayInputStream(commands*.input.join(System.lineSeparator()).getBytes(Charsets.UTF_8))
         output = new ByteArrayOutputStream()
-        new CommandLineApplication(commandInput, output).runEventLoop()
+        new CommandLineApplication(commandInput, output, new InMemoryTimeLines()).runEventLoop()
     }
 
     void receivedOutput(String ... lines) {

@@ -6,11 +6,12 @@ import java.io.*;
  * Entry point for the CommandLineApplication
  */
 public class CommandLineApplication {
-    private Timelines timelines = new Timelines();
+    private final TimeLines timelines;
     private final BufferedReader reader;
     private final BufferedWriter writer;
 
-    public CommandLineApplication(InputStream input, OutputStream output) throws IOException {
+    public CommandLineApplication(InputStream input, OutputStream output, TimeLines timelines) throws IOException {
+        this.timelines = timelines;
         reader = new BufferedReader(new InputStreamReader(input));
         writer = new BufferedWriter(new OutputStreamWriter(output));
         runEventLoop();
