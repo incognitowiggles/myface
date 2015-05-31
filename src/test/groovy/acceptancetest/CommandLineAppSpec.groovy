@@ -37,6 +37,18 @@ class CommandLineAppSpec extends Specification {
         then:
             application.receivedOutput("I am alive! (Just now)")
     }
+
+    def "multiple posts can be pushed to a users timeline"() {
+        given:
+            def application = commandLineApplication()
+        when:
+            application.receivesCommands(
+                    writePost("First post").to("Alice"),
+                    writePost("Second post").to("Alice"),
+                    timelineFor("Alice"))
+        then:
+            application.receivedOutput("First post (Just now)", "Second post (Just now)")
+    }
 }
 
 class SubmittableCommandsDsl {

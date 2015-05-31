@@ -2,23 +2,21 @@ package com.colinvipurs.application;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Timeline for a single user
  */
 public class Timeline implements Iterable<Post> {
-    private final ArrayList<Post> posts = new ArrayList<>();
+    private final List<Post> posts;
 
-    private Timeline(Post post) {
-        posts.add(post);
+    private Timeline(List<Post> posts) {
+        this.posts = posts;
     }
 
     private Timeline() {
-        // nothing to do here
-    }
-
-    public static Timeline withPost(Post post) {
-        return new Timeline(post);
+        this.posts = new ArrayList<>();
+        posts.add(Post.empty());
     }
 
     @Override
@@ -27,6 +25,10 @@ public class Timeline implements Iterable<Post> {
     }
 
     public static Timeline empty() {
-        return new Timeline(Post.empty());
+        return new Timeline();
+    }
+
+    public static Timeline withPosts(List<Post> userPosts) {
+        return userPosts.size() > 0 ? new Timeline(userPosts) : empty();
     }
 }
