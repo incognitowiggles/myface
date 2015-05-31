@@ -10,9 +10,11 @@ public class CommandLineApplication {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(output));
         String inputLine = null;
-        while (!(inputLine = reader.readLine()).equalsIgnoreCase("Exit")) {
-            bufferedWriter.write("Empty\n");
-            bufferedWriter.flush();
+        while ((inputLine = reader.readLine()) != null) {
+            if (!inputLine.equalsIgnoreCase("Exit")) {
+                bufferedWriter.write("Empty\n");
+                bufferedWriter.flush();
+            }
         }
     }
 }

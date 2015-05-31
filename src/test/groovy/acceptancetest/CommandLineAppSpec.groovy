@@ -6,6 +6,7 @@ import spock.lang.Specification
 
 import static CommandLineApplicationDsl.commandLineApplication
 import static SubmittableCommandsDsl.timelineFor
+import static acceptancetest.SubmittableCommandsDsl.emptyLine
 import static acceptancetest.SubmittableCommandsDsl.exit
 
 class CommandLineAppSpec extends Specification {
@@ -17,15 +18,25 @@ class CommandLineAppSpec extends Specification {
         then:
             application.receivedOutput("Empty", "Empty")
     }
+
+    def "ignores empty lines"() {
+        given:
+            def application = commandLineApplication()
+        when:
+            application.receivesCommands(emptyLine())
+        then:
+            application.receivedOutput("")
+    }
 }
 
 class SubmittableCommandsDsl {
     static CommandDsl timelineFor(String name) { return new CommandDsl(input: name) }
     static CommandDsl exit() { return new CommandDsl(input: 'exit') }
+    static CommandDsl emptyLine() { return new CommandDsl() }
 }
 
 class CommandDsl {
-    def String input
+    def String input = ""
 }
 
 class CommandLineApplicationDsl {
