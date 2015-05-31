@@ -4,7 +4,6 @@ plugins {
     id 'java'
     id 'idea'
     id 'groovy'
-    id 'application'
 }
 
 sourceCompatibility = 1.8

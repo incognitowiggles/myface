@@ -17,6 +17,7 @@ public class CommandLineApplication {
     }
 
     public void runEventLoop() throws IOException {
+        writer.write("> ");
         String inputLine;
         while ((inputLine = reader.readLine()) != null) {
             if (inputLine.contains("->")) {
@@ -29,6 +30,7 @@ public class CommandLineApplication {
                     writer.write(post.describe() + "\n");
                 }
             }
+            writer.write("> ");
             writer.flush();
         }
     }
