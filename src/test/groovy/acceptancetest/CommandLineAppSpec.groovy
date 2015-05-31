@@ -9,7 +9,7 @@ import static SubmittableCommandsDsl.timelineFor
 import static acceptancetest.SubmittableCommandsDsl.exit
 
 class CommandLineAppSpec extends Specification {
-    def "accepts commands until exitting"() {
+    def "accepts commands until exiting"() {
         given:
             def application = commandLineApplication()
         when:
@@ -17,7 +17,6 @@ class CommandLineAppSpec extends Specification {
         then:
             application.receivedOutput("Empty", "Empty")
     }
-
 }
 
 class SubmittableCommandsDsl {
