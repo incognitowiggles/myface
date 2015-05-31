@@ -26,20 +26,20 @@ class PostWithBodyRenderingSpec extends Specification {
         expect:
             post.describe() == "ignored ($description)"
         where:
-            timeDifference          | description
-            Duration.ofSeconds(0) | "Just now"
-            Duration.ofSeconds(1) | "Just now"
-            Duration.ofSeconds(59) | "Just now"
-            Duration.ofSeconds(60) | "1 minute ago"
-            Duration.ofSeconds(119) | "1 minute ago"
-            Duration.ofSeconds(121) | "2 minutes ago"
-            Duration.ofSeconds(181) | "3 minutes ago"
-            Duration.ofSeconds(59 * 60 + 59) | "59 minutes ago"
-            Duration.ofHours(1) | "1 hour ago"
+            timeDifference                       | description
+            Duration.ofSeconds(0)                | "Just now"
+            Duration.ofSeconds(1)                | "Just now"
+            Duration.ofSeconds(59)               | "Just now"
+            Duration.ofSeconds(60)               | "1 minute ago"
+            Duration.ofSeconds(119)              | "1 minute ago"
+            Duration.ofSeconds(121)              | "2 minutes ago"
+            Duration.ofSeconds(181)              | "3 minutes ago"
+            Duration.ofSeconds(59 * 60 + 59)     | "59 minutes ago"
+            Duration.ofHours(1)                  | "1 hour ago"
             Duration.ofHours(23).plusMinutes(59) | "23 hours ago"
-            Duration.ofHours(24) | "1 day ago"
-            Duration.ofDays(2) | "2 days ago"
-            Duration.ofDays(7) | "1 week ago"
-            Duration.ofDays(14) | "2 weeks ago"
+            Duration.ofHours(24)                 | "1 day ago"
+            Duration.ofDays(2)                   | "2 days ago"
+            Duration.ofDays(7)                   | "1 week ago"
+            Duration.ofDays(14)                  | "2 weeks ago"
     }
 }
