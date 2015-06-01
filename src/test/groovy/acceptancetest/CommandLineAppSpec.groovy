@@ -17,6 +17,8 @@ import static acceptancetest.SubmittableCommandsDsl.wallFor
 import static acceptancetest.SubmittableCommandsDsl.writePost
 
 public class CommandLineAppSpec extends Specification {
+    private static final String justNow = "(Just now)"
+
     def application
 
     def setup() {
@@ -41,7 +43,7 @@ public class CommandLineAppSpec extends Specification {
         when:
             application.receivesCommands(writePost("I am alive!").by("Alice"), timelineFor("Alice"))
         then:
-            application.receivedOutput("I am alive! (Just now)")
+            application.receivedOutput("I am alive! $justNow")
     }
 
     def "multiple timeline posts are returned in descending time order"() {
@@ -51,7 +53,7 @@ public class CommandLineAppSpec extends Specification {
                     writePost("Second post").by("Alice"),
                     timelineFor("Alice"))
         then:
-            application.receivedOutput("Second post (Just now)", "First post (Just now)")
+            application.receivedOutput("Second post $justNow", "First post $justNow")
     }
 
 
@@ -65,8 +67,8 @@ public class CommandLineAppSpec extends Specification {
                 wallFor("Charlie"))
         then:
             application.receivedOutput(
-                "Charlie - I'm in New York today! Anyone wants to have a coffee? (Just now)",
-                "Alice - I love the weather today (Just now)"
+                "Charlie - I'm in New York today! Anyone wants to have a coffee? $justNow",
+                "Alice - I love the weather today $justNow"
             )
     }
 
