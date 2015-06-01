@@ -16,7 +16,7 @@ public class CommandLineAppSpec extends Specification {
         given:
             def application = commandLineApplication()
         when:
-            application.receivesCommands(timelineFor("Alice"), timelineFor("Bob"), exit())
+            application.receivesCommands(timelineFor("Alice"), timelineFor("Bob"), exit(), timelineFor("Alice"))
         then:
             application.receivedOutput("Empty", "Empty")
     }

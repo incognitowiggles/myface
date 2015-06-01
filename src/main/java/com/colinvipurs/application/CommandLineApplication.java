@@ -21,12 +21,15 @@ public class CommandLineApplication {
         writer.flush();
         String inputLine;
         while ((inputLine = reader.readLine()) != null) {
+            if (inputLine.equalsIgnoreCase("exit")) {
+                return;
+            }
             if (inputLine.contains("->")) {
                 String[] commandData = inputLine.split(" -> ");
                 String user = commandData[0];
                 String post = commandData[1];
                 timelines.push(NewPost.of(user, post));
-            } else if (!inputLine.equalsIgnoreCase("Exit")) {
+            } else {
                 for (Post post : timelines.postsFor(inputLine)) {
                     writer.write(post.describe() + "\n");
                 }
