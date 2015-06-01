@@ -39,7 +39,7 @@ public class CommandLineAppSpec extends Specification {
             application.receivedOutput("I am alive! (Just now)")
     }
 
-    def "multiple posts can be pushed to a users timeline"() {
+    def "multiple timeline posts are returned in descending time order"() {
         given:
             def application = commandLineApplication()
         when:
@@ -48,7 +48,7 @@ public class CommandLineAppSpec extends Specification {
                     writePost("Second post").to("Alice"),
                     timelineFor("Alice"))
         then:
-            application.receivedOutput("First post (Just now)", "Second post (Just now)")
+            application.receivedOutput("Second post (Just now)", "First post (Just now)")
     }
 }
 

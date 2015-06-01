@@ -10,8 +10,8 @@ public class InMemoryTimeLines implements TimeLines {
 
     @Override
     public void push(NewPost newPost) {
-        posts.computeIfAbsent(newPost.getUser(), (user) -> new ArrayList<>())
-                .add(PostWithBody.of(newPost.getPost(), newPost.getTime()));
+        posts.computeIfAbsent(newPost.getUser(), (user) -> new LinkedList<>())
+                .add(0, PostWithBody.of(newPost.getPost(), newPost.getTime()));
     }
 
     @Override
