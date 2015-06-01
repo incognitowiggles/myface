@@ -1,9 +1,12 @@
 package acceptancetest
 
 import com.colinvipurs.application.CommandLineApplication
-import com.colinvipurs.application.InMemoryTimeLines
+import com.colinvipurs.application.InMemoryDataStore
+import com.colinvipurs.application.InMemoryFollowers
 import groovy.json.internal.Charsets
 import spock.lang.Specification
+
+import java.time.Instant
 
 import static CommandLineApplicationDsl.commandLineApplication
 import static SubmittableCommandsDsl.timelineFor
@@ -54,8 +57,9 @@ public class CommandLineAppSpec extends Specification {
 
     def "a user can subscribe to another users timeline"() {
         when:
+            application.receivesCommands(writePost("I love the weather today").to("Alice"))
+            waitForClockTick()
             application.receivesCommands(
-                writePost("I love the weather today").to("Alice"),
                 writePost("I'm in New York today! Anyone wants to have a coffee?").to("Charlie"),
                 follow("Alice").by("Charlie"),
                 wallFor("Charlie"))
@@ -64,6 +68,16 @@ public class CommandLineAppSpec extends Specification {
                 "Charlie - I'm in New York today! Anyone wants to have a coffee? (Just now)",
                 "Alice - I love the weather today (Just now)"
             )
+    }
+
+    // because we're testing from the outside in we need to wait for the smallest amount of host OS clock
+    // tick to happen- we do that by waiting until 2 Instant.now() calls do not equal each other
+    // in this way we are guaranteed that posts sent after this will appear earlier in a time line
+    private waitForClockTick() {
+        def start = Instant.now()
+        while (start.compareTo(Instant.now()) != 0)  {
+            // do nothing
+        }
     }
 }
 
@@ -91,13 +105,15 @@ class FollowCommandDsl {
 }
 
 class CommandLineApplicationDsl {
-    ByteArrayOutputStream output;
+    ByteArrayOutputStream output
+    private InMemoryDataStore store = new InMemoryDataStore()
+    private InMemoryFollowers followers = new InMemoryFollowers()
 
     def receivesCommands(CommandDsl ... commands) {
         ByteArrayInputStream commandInput =
                 new ByteArrayInputStream(commands*.input.join(System.lineSeparator()).getBytes(Charsets.UTF_8))
         output = new ByteArrayOutputStream()
-        new CommandLineApplication(commandInput, output, new InMemoryTimeLines()).runEventLoop()
+        new CommandLineApplication(commandInput, output, store, followers).runEventLoop()
     }
 
     void receivedOutput(String ... lines) {
