@@ -18,6 +18,7 @@ public class CommandLineApplication {
 
     public void runEventLoop() throws IOException {
         writer.write("> ");
+        writer.flush();
         String inputLine;
         while ((inputLine = reader.readLine()) != null) {
             if (inputLine.contains("->")) {

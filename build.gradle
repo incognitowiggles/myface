@@ -4,10 +4,13 @@ plugins {
     id 'java'
     id 'idea'
     id 'groovy'
+    id 'application'
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+mainClassName = 'com.colinvipurs.application.Start'
 
 repositories {
     mavenCentral()
@@ -30,13 +33,13 @@ dependencies {
  * as it already has access to the final classpath etc.
  */
 task end2end(dependsOn: [test, classes], type: JavaExec) {
-    main = 'com.colinvipurs.application.Start'
+    main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = new ByteArrayInputStream("Alice".getBytes(Charsets.UTF_8))
     standardOutput = new ByteArrayOutputStream()
 
     doLast {
         def commandOutput = standardOutput.toString()
-        assert commandOutput == "Empty\n"
+        assert commandOutput == "> Empty\n> "
     }
 }

@@ -11,7 +11,7 @@ import static acceptancetest.SubmittableCommandsDsl.emptyLine
 import static acceptancetest.SubmittableCommandsDsl.exit
 import static acceptancetest.SubmittableCommandsDsl.writePost
 
-class CommandLineAppSpec extends Specification {
+public class CommandLineAppSpec extends Specification {
     def "accepts commands until exiting"() {
         given:
             def application = commandLineApplication()
@@ -27,7 +27,7 @@ class CommandLineAppSpec extends Specification {
         when:
             application.receivesCommands(emptyLine())
         then:
-            application.receivedOutput("")
+            application.receivedOutput()
     }
 
     def "a user can post to their own timeline"() {
@@ -79,7 +79,10 @@ class CommandLineApplicationDsl {
     }
 
     void receivedOutput(String ... lines) {
-        assert output.toString().split(System.lineSeparator()) == lines
+        assert output.toString()
+                .split(System.lineSeparator())
+                .collect { it.replaceAll("> ", "") }
+                .findAll { !it.equals("")} == lines
     }
 
     static CommandLineApplicationDsl commandLineApplication() {
