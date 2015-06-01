@@ -39,7 +39,7 @@ public class CommandLineAppSpec extends Specification {
 
     def "a user can post to their own timeline"() {
         when:
-            application.receivesCommands(writePost("I am alive!").to("Alice"), timelineFor("Alice"))
+            application.receivesCommands(writePost("I am alive!").by("Alice"), timelineFor("Alice"))
         then:
             application.receivedOutput("I am alive! (Just now)")
     }
@@ -47,8 +47,8 @@ public class CommandLineAppSpec extends Specification {
     def "multiple timeline posts are returned in descending time order"() {
         when:
             application.receivesCommands(
-                    writePost("First post").to("Alice"),
-                    writePost("Second post").to("Alice"),
+                    writePost("First post").by("Alice"),
+                    writePost("Second post").by("Alice"),
                     timelineFor("Alice"))
         then:
             application.receivedOutput("Second post (Just now)", "First post (Just now)")
@@ -57,10 +57,10 @@ public class CommandLineAppSpec extends Specification {
 
     def "a user can subscribe to another users timeline"() {
         when:
-            application.receivesCommands(writePost("I love the weather today").to("Alice"))
+            application.receivesCommands(writePost("I love the weather today").by("Alice"))
             waitForClockTick()
             application.receivesCommands(
-                writePost("I'm in New York today! Anyone wants to have a coffee?").to("Charlie"),
+                writePost("I'm in New York today! Anyone wants to have a coffee?").by("Charlie"),
                 follow("Alice").by("Charlie"),
                 wallFor("Charlie"))
         then:
@@ -92,7 +92,7 @@ class SubmittableCommandsDsl {
 
 class UserCommandDsl {
     def String command
-    CommandDsl to(String user) { return new CommandDsl(input: "$user $command")}
+    CommandDsl by(String user) { return new CommandDsl(input: "$user $command")}
 }
 
 class CommandDsl {
