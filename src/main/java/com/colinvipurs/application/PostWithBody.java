@@ -27,7 +27,7 @@ public class PostWithBody implements Post {
     private String renderedTime() {
         long timeDifferenceInSeconds = Instant.now().getEpochSecond() - time.getEpochSecond();
         TimeDifference difference = TimeDifference.fromSeconds(timeDifferenceInSeconds);
-        if (timeDifferenceInSeconds < 60) {
+        if (timeDifferenceInSeconds < 1) {
             return "Just now";
         } else {
             return String.format("%d %s ago", difference.quantity(), difference.unit());
@@ -52,6 +52,9 @@ public class PostWithBody implements Post {
         }
 
         public static TimeDifference fromSeconds(long timeDifferenceInSeconds) {
+            if (timeDifferenceInSeconds < 60) {
+                return new TimeDifference(timeDifferenceInSeconds, "second");
+            }
             long timeDifferenceInMinutes = timeDifferenceInSeconds / 60;
             if (timeDifferenceInMinutes < 60) {
                 return new TimeDifference(timeDifferenceInMinutes, "minute");

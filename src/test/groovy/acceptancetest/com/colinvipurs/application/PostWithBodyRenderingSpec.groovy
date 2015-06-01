@@ -28,8 +28,8 @@ class PostWithBodyRenderingSpec extends Specification {
         where:
             timeDifference                       | description
             Duration.ofSeconds(0)                | "Just now"
-            Duration.ofSeconds(1)                | "Just now"
-            Duration.ofSeconds(59)               | "Just now"
+            Duration.ofSeconds(1)                | "1 second ago"
+            Duration.ofSeconds(59)               | "59 seconds ago"
             Duration.ofSeconds(60)               | "1 minute ago"
             Duration.ofSeconds(119)              | "1 minute ago"
             Duration.ofSeconds(121)              | "2 minutes ago"
