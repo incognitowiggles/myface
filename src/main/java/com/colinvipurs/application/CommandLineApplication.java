@@ -29,6 +29,15 @@ public class CommandLineApplication {
                 String user = commandData[0];
                 String post = commandData[1];
                 timelines.push(NewPost.of(user, post));
+            } else if (inputLine.contains("follow")) {
+                // do nothing for now, but avoid the "Empty" message in output
+            } else if (inputLine.endsWith("wall")) {
+                for (Post post : timelines.postsFor("Charlie")) {
+                    writer.write("Charlie - " + post.describe() + "\n");
+                }
+                for (Post post : timelines.postsFor("Alice")) {
+                    writer.write("Alice - " + post.describe() + "\n");
+                }
             } else {
                 for (Post post : timelines.postsFor(inputLine)) {
                     writer.write(post.describe() + "\n");

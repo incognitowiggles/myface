@@ -9,12 +9,18 @@ import static CommandLineApplicationDsl.commandLineApplication
 import static SubmittableCommandsDsl.timelineFor
 import static acceptancetest.SubmittableCommandsDsl.emptyLine
 import static acceptancetest.SubmittableCommandsDsl.exit
+import static acceptancetest.SubmittableCommandsDsl.follow
+import static acceptancetest.SubmittableCommandsDsl.wallFor
 import static acceptancetest.SubmittableCommandsDsl.writePost
 
 public class CommandLineAppSpec extends Specification {
+    def application
+
+    def setup() {
+        application = commandLineApplication()
+    }
+
     def "accepts commands until exiting"() {
-        given:
-            def application = commandLineApplication()
         when:
             application.receivesCommands(timelineFor("Alice"), timelineFor("Bob"), exit(), timelineFor("Alice"))
         then:
@@ -22,8 +28,6 @@ public class CommandLineAppSpec extends Specification {
     }
 
     def "ignores empty lines"() {
-        given:
-            def application = commandLineApplication()
         when:
             application.receivesCommands(emptyLine())
         then:
@@ -31,8 +35,6 @@ public class CommandLineAppSpec extends Specification {
     }
 
     def "a user can post to their own timeline"() {
-        given:
-            def application = commandLineApplication()
         when:
             application.receivesCommands(writePost("I am alive!").to("Alice"), timelineFor("Alice"))
         then:
@@ -40,8 +42,6 @@ public class CommandLineAppSpec extends Specification {
     }
 
     def "multiple timeline posts are returned in descending time order"() {
-        given:
-            def application = commandLineApplication()
         when:
             application.receivesCommands(
                     writePost("First post").to("Alice"),
@@ -50,6 +50,21 @@ public class CommandLineAppSpec extends Specification {
         then:
             application.receivedOutput("Second post (Just now)", "First post (Just now)")
     }
+
+
+    def "a user can subscribe to another users timeline"() {
+        when:
+            application.receivesCommands(
+                writePost("I love the weather today").to("Alice"),
+                writePost("I'm in New York today! Anyone wants to have a coffee?").to("Charlie"),
+                follow("Alice").by("Charlie"),
+                wallFor("Charlie"))
+        then:
+            application.receivedOutput(
+                "Charlie - I'm in New York today! Anyone wants to have a coffee? (Just now)",
+                "Alice - I love the weather today (Just now)"
+            )
+    }
 }
 
 class SubmittableCommandsDsl {
@@ -57,6 +72,8 @@ class SubmittableCommandsDsl {
     static CommandDsl exit() { return new CommandDsl(input: 'exit') }
     static CommandDsl emptyLine() { return new CommandDsl() }
     static UserCommandDsl writePost(String postText) { return new UserCommandDsl(command: "-> $postText") }
+    static FollowCommandDsl follow(String userToFollow) { return new FollowCommandDsl(targetUser: userToFollow) }
+    static CommandDsl wallFor(String name) { return new CommandDsl(input: "$name wall") }
 }
 
 class UserCommandDsl {
@@ -66,6 +83,11 @@ class UserCommandDsl {
 
 class CommandDsl {
     def String input = ""
+}
+
+class FollowCommandDsl {
+    def String targetUser
+    def by(String userFollowing) { return new CommandDsl(input: "$userFollowing follows $targetUser")}
 }
 
 class CommandLineApplicationDsl {
