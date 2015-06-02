@@ -1,8 +1,8 @@
 package acceptancetest
 
-import com.colinvipurs.application.CommandLineApplication
-import com.colinvipurs.application.InMemoryDataStore
-import com.colinvipurs.application.InMemoryFollowers
+import com.colinvipurs.application.cli.CommandLineApplication
+import com.colinvipurs.application.repositories.InMemoryDataStore
+import com.colinvipurs.application.repositories.InMemoryFollowers
 import groovy.json.internal.Charsets
 import spock.lang.Specification
 
@@ -11,7 +11,6 @@ import java.time.Instant
 import static CommandLineApplicationDsl.commandLineApplication
 import static SubmittableCommandsDsl.timelineFor
 import static acceptancetest.SubmittableCommandsDsl.emptyLine
-import static acceptancetest.SubmittableCommandsDsl.exit
 import static acceptancetest.SubmittableCommandsDsl.follow
 import static acceptancetest.SubmittableCommandsDsl.wallFor
 import static acceptancetest.SubmittableCommandsDsl.writePost
@@ -23,13 +22,6 @@ public class CommandLineAppSpec extends Specification {
 
     def setup() {
         application = commandLineApplication()
-    }
-
-    def "accepts commands until exiting"() {
-        when:
-            application.receivesCommands(timelineFor("Alice"), timelineFor("Bob"), exit(), timelineFor("Alice"))
-        then:
-            application.receivedOutput("Empty", "Empty")
     }
 
     def "ignores empty lines"() {

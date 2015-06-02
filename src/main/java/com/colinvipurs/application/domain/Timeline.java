@@ -1,8 +1,7 @@
-package com.colinvipurs.application;
+package com.colinvipurs.application.domain;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -17,7 +16,6 @@ public class Timeline implements Iterable<Post> {
 
     private Timeline() {
         this.posts = new ArrayList<>();
-        posts.add(Post.empty());
     }
 
     @Override

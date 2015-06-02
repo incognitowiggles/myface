@@ -1,4 +1,8 @@
-package com.colinvipurs.application;
+package com.colinvipurs.application.cli;
+
+import com.colinvipurs.application.cli.CommandLineApplication;
+import com.colinvipurs.application.repositories.InMemoryDataStore;
+import com.colinvipurs.application.repositories.InMemoryFollowers;
 
 public class Start {
     public static void main(String[] args) throws Exception {

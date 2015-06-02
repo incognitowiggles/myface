@@ -1,30 +1,34 @@
-package com.colinvipurs.application;
+package com.colinvipurs.application.domain;
 
-import java.time.Duration;
 import java.time.Instant;
 
 /**
  * An existing post
  */
-public class PostWithBody implements Post {
+public class Post {
+    private String user;
     private final String body;
     private final Instant time;
 
-    private PostWithBody(String body, Instant time) {
+    private Post(String user, String body, Instant time) {
+        this.user = user;
         this.body = body;
         this.time = time;
     }
 
-    public static Post of(String body, Instant time) {
-        return new PostWithBody(body, time);
+    public static Post of(String user, String body, Instant time) {
+        return new Post(user, body, time);
     }
 
-    @Override
-    public String describe() {
-        return String.format("%s (%s)", body, renderedTime());
+    public String body() {
+        return body;
     }
 
-    private String renderedTime() {
+    public String user() {
+        return user;
+    }
+
+    public String formattedTime() {
         long timeDifferenceInSeconds = Instant.now().getEpochSecond() - time.getEpochSecond();
         TimeDifference difference = TimeDifference.fromSeconds(timeDifferenceInSeconds);
         if (timeDifferenceInSeconds < 1) {

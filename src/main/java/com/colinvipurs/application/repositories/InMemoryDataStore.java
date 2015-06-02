@@ -1,8 +1,11 @@
-package com.colinvipurs.application;
+package com.colinvipurs.application.repositories;
+
+import com.colinvipurs.application.domain.NewPost;
+import com.colinvipurs.application.domain.Post;
+import com.colinvipurs.application.domain.Timeline;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Class to hold timeline information for all users
@@ -33,14 +36,14 @@ public class InMemoryDataStore implements TimeLines {
                 .map(postUser -> rawPostsFor(postUser))
                 .flatMap(Collection::stream)
                 .sorted((p1, p2) -> p2.getTime().compareTo(p1.getTime()))
-                .map(post -> WallPost.of(post.getUser(), postView(post)))
+                .map(post -> postView(post))
                 .collect(Collectors.toList());
 
         return Timeline.withPosts(wallPosts);
     }
 
     private Post postView(NewPost post) {
-        return PostWithBody.of(post.getPost(), post.getTime());
+        return Post.of(post.getUser(), post.getPost(), post.getTime());
     }
 
     private List<NewPost> rawPostsFor(String user) {

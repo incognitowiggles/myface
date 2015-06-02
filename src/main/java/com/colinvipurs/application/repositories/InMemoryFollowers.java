@@ -1,4 +1,4 @@
-package com.colinvipurs.application;
+package com.colinvipurs.application.repositories;
 
 import java.util.HashMap;
 import java.util.HashSet;

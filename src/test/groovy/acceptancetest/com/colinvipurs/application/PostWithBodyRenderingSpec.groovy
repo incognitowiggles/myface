@@ -1,32 +1,21 @@
 package acceptancetest.com.colinvipurs.application
 
-import com.colinvipurs.application.PostWithBody
+import com.colinvipurs.application.domain.Post
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.Duration
 import java.time.Instant
-import java.time.temporal.TemporalUnit
 
 class PostWithBodyRenderingSpec extends Specification {
     @Unroll
-    def "renders #body as as the body"() {
+    def "renders posted at #timeDifference ago as #expectedTime"() {
         given:
-            def post = PostWithBody.of(body, Instant.now())
+            def post = Post.of("ignored", "ignored", Instant.now().minus(timeDifference))
         expect:
-            post.describe() startsWith "$body ("
+            post.formattedTime() == expectedTime
         where:
-            body << ["I am a post", "I am another post"]
-    }
-
-    @Unroll
-    def "renders posted at #timeDifference ago as #description"() {
-        given:
-            def post = PostWithBody.of("ignored", Instant.now().minus(timeDifference))
-        expect:
-            post.describe() == "ignored ($description)"
-        where:
-            timeDifference                       | description
+            timeDifference                       | expectedTime
             Duration.ofSeconds(0)                | "Just now"
             Duration.ofSeconds(1)                | "1 second ago"
             Duration.ofSeconds(59)               | "59 seconds ago"

@@ -1,4 +1,4 @@
-package com.colinvipurs.application;
+package com.colinvipurs.application.domain;
 
 import java.time.Instant;
 

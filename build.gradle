@@ -20,7 +20,7 @@ project.applicationName = "crowdmix"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-mainClassName = 'com.colinvipurs.application.Start'
+mainClassName = 'com.colinvipurs.application.cli.Start'
 
 repositories {
     mavenCentral()
@@ -35,8 +35,10 @@ dependencies {
 
 /**
  * This will run an end-to-end test after all standard unit/integration tests have been run.
- * This simply starts the application asking for Alices wall an verifies that there is just the response
- * of "Empty".
+ * This simply starts the application, posts to Alice's wall and verifies the output.
+ *
+ * Although this seems like a duplication of the acceptance tests, this verifies that the main event loop
+ * is called correctly from the main method
  *
  * This test is hard to write unit standard unit testing tools due to the nature of messing around with
  * stdin/stdout from within the test runner process itself and is very easy to write within Gradle itself
@@ -45,11 +47,12 @@ dependencies {
 task end2end(dependsOn: [test, classes], type: JavaExec) {
     main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
-    standardInput = new ByteArrayInputStream("Alice".getBytes(groovy.json.internal.Charsets.UTF_8))
+    def input = "Alice -> Hello\nAlice"
+    standardInput = new ByteArrayInputStream(input.getBytes(groovy.json.internal.Charsets.UTF_8))
     standardOutput = new ByteArrayOutputStream()
 
     doLast {
         def commandOutput = standardOutput.toString()
-        assert commandOutput == "> Empty\n> "
+        assert commandOutput.contains("Hello")
     }
 }
