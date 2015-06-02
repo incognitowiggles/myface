@@ -1,4 +1,9 @@
-import groovy.json.internal.Charsets
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+    }
+}
 
 plugins {
     id 'java'
@@ -6,6 +11,11 @@ plugins {
     id 'groovy'
     id 'application'
 }
+
+apply plugin: 'docker'
+
+project.group "com.colinvipurs"
+project.applicationName = "crowdmix"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -35,7 +45,7 @@ dependencies {
 task end2end(dependsOn: [test, classes], type: JavaExec) {
     main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
-    standardInput = new ByteArrayInputStream("Alice".getBytes(Charsets.UTF_8))
+    standardInput = new ByteArrayInputStream("Alice".getBytes(groovy.json.internal.Charsets.UTF_8))
     standardOutput = new ByteArrayOutputStream()
 
     doLast {
