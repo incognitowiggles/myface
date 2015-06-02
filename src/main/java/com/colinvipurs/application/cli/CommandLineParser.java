@@ -32,11 +32,11 @@ public class CommandLineParser {
             String user = commandData[0];
             String userToFollow = commandData[1];
             return new FollowingUseCase(followers, user, userToFollow);
-        } else if (inputLine.endsWith("wall")) {
+        }
+        if (inputLine.endsWith("wall")) {
             String user = inputLine.split(" wall")[0];
             return new WallOutputter(new ViewWallUseCase(timelines, followers, user), writer);
-        } else {
-            return new TimelineOutputter(new ViewTimelineUseCase(timelines, inputLine), writer);
         }
+        return new TimelineOutputter(new ViewTimelineUseCase(timelines, inputLine), writer);
     }
 }
