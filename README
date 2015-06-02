@@ -1,8 +1,39 @@
 Twitter Console Application
 ===========================
 
+Prerequisites
+=============
+
+JDK8
+
+Building
+========
+
 This application can be built using Gradle.
 
 To execute all tests issue:
 
-$ ./gradlew test
+$ ./gradlew end2end
+
+The first time you run this the appropriate version of Gradle will be downloaded
+
+Running
+=======
+
+The application can be run either directly from the build directory or with Docker.
+
+To run directly, first build the app:
+
+$ ./gradlew installDist
+
+Then execute the generated shell script:
+
+$ ./build/install/crowdmix/bin/crowdmix
+
+To run with Docker (installed separately), first build the necessary Docker image:
+
+./gradlew distDocker
+
+This may take a short time while the necessary Docker image is downloaded.  Once this has completed the application can be run with:
+
+$ docker run -it com.colinvipurs/crowdmix
